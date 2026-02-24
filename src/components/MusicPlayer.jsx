@@ -133,7 +133,7 @@ export default function MusicPlayer() {
         ref={audioRef}
         id="bgAudio"
         loop
-        src="public/music/ambient.mp3"
+        src="/music/ambient.mp3"
       />
     </div>
   );
