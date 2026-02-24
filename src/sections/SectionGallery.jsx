@@ -23,10 +23,10 @@ const gallery = [
   { type: "photo", src: "/photos/lastdayofyear.webp", caption: "Last day of year" },
 
   // 🎥 VIDEOS
-  { type: "video", src: "/videos/video1.mp4", poster: "", caption: "Our love story" },
-  { type: "video", src: "/videos/video2.mp4", poster: "", caption: "Dinner Date" },
-  { type: "video", src: "/videos/video3.mp4", poster: "", caption: "Funny moments" },
-  { type: "video", src: "/videos/video4.mp4", poster: "", caption: "Birthday wishes" },
+  { type: "video", src: "/videos/video1.mp4", caption: "Our love story" },
+  { type: "video", src: "/videos/video2.mp4", caption: "Dinner Date" },
+  { type: "video", src: "/videos/video3.mp4", caption: "Funny moments" },
+  { type: "video", src: "/videos/video4.mp4", caption: "Birthday wishes" },
 ];
 
 const placeholderColors = [
