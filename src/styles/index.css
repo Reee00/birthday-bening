@@ -2370,6 +2370,8 @@ section {
   background: rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
   opacity: 1;
+  z-index: 10;         /* ← tambahkan ini */
+  pointer-events: auto;
 }
 
 .carousel-slide.active .video-play-icon {
@@ -2422,6 +2424,7 @@ section {
   padding: 2rem;
   opacity: 0;
   transition: opacity 0.4s ease;
+  pointer-events: none; /* ← tambahkan ini */
 }
 
 .carousel-slide.active .carousel-overlay {

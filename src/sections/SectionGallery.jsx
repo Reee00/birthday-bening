@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 // Data: 18 foto + 4 video
 const gallery = [
   // 📸 PHOTOS
-  { type: "photo", src: "/photos/A_moment_intime.webp", caption: "A moment in time" },
   { type: "photo", src: "/photos/Justustwo.webp", caption: "Just us two" },
   { type: "photo", src: "/photos/smilesandstars.webp", caption: "Smiles & stars" },
   { type: "photo", src: "/photos/goldenhour.webp", caption: "Golden hour" },
@@ -21,6 +20,7 @@ const gallery = [
   { type: "photo", src: "/photos/wintervibes.webp", caption: "Winter vibes" },
   { type: "photo", src: "/photos/sicantik.webp", caption: "Si Cantik" },
   { type: "photo", src: "/photos/lastdayofyear.webp", caption: "Last day of year" },
+  { type: "photo", src: "/photos/A_moment_intime.webp", caption: "A moment in time" },
 
   // 🎥 VIDEOS
   { type: "video", src: "/videos/video1.mp4", poster: "", caption: "Our love story" },
