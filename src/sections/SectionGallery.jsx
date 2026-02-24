@@ -1,119 +1,191 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 
-// Data: 19 foto + 5 video
+// Data: 18 foto + 4 video
 const gallery = [
   // 📸 PHOTOS
-  { type: "photo", src: "/photos/A_moment_intime.webp", caption: "A moment in time" },
-  { type: "photo", src: "/photos/Justustwo.webp", caption: "Just us two" },
-  { type: "photo", src: "/photos/smilesandstars.webp", caption: "Smiles & stars"},
-  { type: "photo", src: "/photos/goldenhour.webp", caption: "Golden hour"},
-  { type: "photo", src: "/photos/alwaysforever.webp", caption: "Always & forever" },
-  { type: "photo", src: "/photos/Yourbeautiful.webp", caption: "Your beautiful smile" },
-  { type: "photo", src: "/photos/adventurestogether.webp", caption: "Adventures together" },
-  { type: "photo", src: "/photos/ngejamu.webp", caption: "Nge Jamu" },
-  { type: "photo", src: "/photos/dancelikenobodys.webp", caption: "Dance like nobody's watching" },
-  { type: "photo", src: "/photos/ngelancong.webp", caption: "Ngelancong" },
-  { type: "photo", src: "/photos/coffedate.webp", caption: "Coffee date" },
-  { type: "photo", src: "/photos/homemadecoffee.webp", caption: "Home Made Coffee" },
-  { type: "photo", src: "/photos/Rainydaycuddies.webp", caption: "Rainy Day Cuddles" },
-  { type: "photo", src: "/photos/canditmoments.webp", caption: "Candid moments" },
-  { type: "photo", src: "/photos/NightWalks.webp", caption: "Night walks"},
-  { type: "photo", src: "/photos/wintervibes.webp", caption: "Winter vibes" },
-  { type: "photo", src: "/photos/sicantik.webp", caption: "Si Cantik" },
-  { type: "photo", src: "/photos/lastdayofyear.webp", caption: "Last day of year" },
+  { type: "photo", src: "/photos/A_moment_intime.webp",      caption: "A moment in time" },
+  { type: "photo", src: "/photos/Jususttwo.webp",             caption: "Just us two" },
+  { type: "photo", src: "/photos/smilesandstars.webp",        caption: "Smiles & stars" },
+  { type: "photo", src: "/photos/goldenhour.webp",            caption: "Golden hour" },
+  { type: "photo", src: "/photos/alwaysforever.webp",         caption: "Always & forever" },
+  { type: "photo", src: "/photos/Yourbeautiful.webp",         caption: "Your beautiful smile" },
+  { type: "photo", src: "/photos/adventurestogether.webp",    caption: "Adventures together" },
+  { type: "photo", src: "/photos/ngejamu.webp",               caption: "Nge Jamu" },
+  { type: "photo", src: "/photos/dancelikenobodys.webp",      caption: "Dance like nobody's watching" },
+  { type: "photo", src: "/photos/ngelancong.webp",            caption: "Ngelancong" },
+  { type: "photo", src: "/photos/coffedate.webp",             caption: "Coffee date" },
+  { type: "photo", src: "/photos/homemadecoffee.webp",        caption: "Home Made Coffee" },
+  { type: "photo", src: "/photos/Rainydaycuddies.webp",       caption: "Rainy Day Cuddles" },
+  { type: "photo", src: "/photos/canditmoments.webp",         caption: "Candid moments" },
+  { type: "photo", src: "/photos/NightWalks.webp",            caption: "Night walks" },
+  { type: "photo", src: "/photos/wintervibes.webp",           caption: "Winter vibes" },
+  { type: "photo", src: "/photos/sicantik.webp",              caption: "Si Cantik" },
+  { type: "photo", src: "/photos/lastdayofyear.webp",         caption: "Last day of year" },
 
   // 🎥 VIDEOS
-  { type: "video", src: "/videos/video1.mp4", caption: "Our love story" },
-  { type: "video", src: "/videos/video2.mp4", caption: "Dinner Date" },
-  { type: "video", src: "/videos/video3.mp4", caption: "Funny moments" },
-  { type: "video", src: "/videos/video4.mp4", caption: "Birthday wishes" },
+  { type: "video", src: "/videos/video1.mp4", poster: "/videos/poster1.webp", caption: "Our love story" },
+  { type: "video", src: "/videos/video2.mp4", poster: "/videos/poster2.webp", caption: "Dinner Date" },
+  { type: "video", src: "/videos/video3.mp4", poster: "/videos/poster3.webp", caption: "Funny moments" },
+  { type: "video", src: "/videos/video4.mp4", poster: "/videos/poster4.webp", caption: "Birthday wishes" },
 ];
-
-const placeholderColors = [
-  ["#2a0a4a", "#ff6eb0", "#9b59d6"],
-  ["#030a2a", "#4fc3f7", "#9b59d6"],
-  ["#1a0830", "#ffd77a", "#ff6eb0"],
-  ["#1a0a00", "#ffd77a", "#ff8c40"],
-  ["#0a0a2a", "#9b59d6", "#4fc3f7"],
-  ["#0a2a1a", "#4fc3f7", "#ffd77a"],
-  ["#2a0a1a", "#ff6eb0", "#c084fc"],
-  ["#1a1a0a", "#ffd77a", "#ff6eb0"],
-  ["#0a0a3a", "#c084fc", "#4fc3f7"],
-  ["#2a0a0a", "#ff6eb0", "#ffd77a"],
-];
-
-const icons = ["✦", "♡", "✧", "◇", "★", "✿", "💫", "🌟", "💕", "🎀"];
 
 export default function SectionGallery() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxType, setLightboxType] = useState("photo");
-  const [lightboxSrc, setLightboxSrc] = useState("");
-  const [lightboxCaption, setLightboxCaption] = useState("");
-  const [autoPlay, setAutoPlay] = useState(true);
-  const [filterType, setFilterType] = useState("all");
-  const [visibleThumbnails, setVisibleThumbnails] = useState(5);
-  const autoPlayRef = useRef(null);
-  const carouselRef = useRef(null);
-  const videoRef = useRef(null);
+  const [currentIndex, setCurrentIndex]     = useState(0);
+  const [lightboxOpen, setLightboxOpen]     = useState(false);
+  const [lightboxItem, setLightboxItem]     = useState(null);
+  const [autoPlay, setAutoPlay]             = useState(true);
+  const [filterType, setFilterType]         = useState("all");
+  const [playingInline, setPlayingInline]   = useState(false); // tracks inline video play state
 
-  // Filter gallery items
-  const filteredGallery =
-    filterType === "all"
-      ? gallery
-      : gallery.filter((item) => item.type === filterType);
+  const autoPlayRef       = useRef(null);
+  const autoPlayPauseRef  = useRef(null);
+  // FIX 1: Use a Map of refs keyed by index instead of a single ref
+  const videoRefs         = useRef({});
+  const lightboxVideoRef  = useRef(null);
+  const thumbnailsRef     = useRef(null);
 
-  // Auto-play carousel
+  // ─── Filtered list ─────────────────────────────────────────────
+  const filteredGallery = filterType === "all"
+    ? gallery
+    : gallery.filter((item) => item.type === filterType);
+
+  const current = filteredGallery[currentIndex] ?? filteredGallery[0];
+
+  // ─── Auto-play carousel (skip when current slide is a playing video) ─
   useEffect(() => {
-    if (!autoPlay) return;
+    clearInterval(autoPlayRef.current);
+    if (!autoPlay || playingInline) return;
 
     autoPlayRef.current = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % filteredGallery.length);
     }, 5000);
 
     return () => clearInterval(autoPlayRef.current);
-  }, [autoPlay, filteredGallery.length]);
+  }, [autoPlay, playingInline, filteredGallery.length]);
 
-  const goToSlide = (index) => {
+  // FIX 2: Pause any inline video when slide changes
+  useEffect(() => {
+    // Pause all inline videos whenever the active slide changes
+    Object.values(videoRefs.current).forEach((v) => {
+      if (v && !v.paused) {
+        v.pause();
+      }
+    });
+    setPlayingInline(false);
+  }, [currentIndex]);
+
+  // ─── Scroll active thumbnail into view ─────────────────────────
+  useEffect(() => {
+    const activeThumb = thumbnailsRef.current?.querySelector(".carousel-thumbnail.active");
+    if (activeThumb) {
+      activeThumb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    }
+  }, [currentIndex]);
+
+  // ─── Navigation helpers ─────────────────────────────────────────
+  const pauseAutoPlayTemporarily = useCallback(() => {
+    setAutoPlay(false);
+    clearTimeout(autoPlayPauseRef.current);
+    autoPlayPauseRef.current = setTimeout(() => setAutoPlay(true), 12000);
+  }, []);
+
+  const goToSlide = useCallback((index) => {
     setCurrentIndex(index);
-    setAutoPlay(false);
-    setTimeout(() => setAutoPlay(true), 10000);
-  };
+    pauseAutoPlayTemporarily();
+  }, [pauseAutoPlayTemporarily]);
 
-  const goToPrevious = () => {
-    setCurrentIndex(
-      (prev) => (prev - 1 + filteredGallery.length) % filteredGallery.length
-    );
-    setAutoPlay(false);
-    setTimeout(() => setAutoPlay(true), 10000);
-  };
+  const goToPrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + filteredGallery.length) % filteredGallery.length);
+    pauseAutoPlayTemporarily();
+  }, [filteredGallery.length, pauseAutoPlayTemporarily]);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % filteredGallery.length);
-    setAutoPlay(false);
-    setTimeout(() => setAutoPlay(true), 10000);
-  };
+    pauseAutoPlayTemporarily();
+  }, [filteredGallery.length, pauseAutoPlayTemporarily]);
 
-  const openLightbox = (item) => {
-    setLightboxType(item.type);
-    setLightboxSrc(item.src);
-    setLightboxCaption(item.caption);
+  // ─── Keyboard navigation ────────────────────────────────────────
+  useEffect(() => {
+    const onKey = (e) => {
+      if (lightboxOpen) {
+        if (e.key === "Escape") closeLightbox();
+        return;
+      }
+      if (e.key === "ArrowLeft")  goToPrevious();
+      if (e.key === "ArrowRight") goToNext();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxOpen, goToPrevious, goToNext]);
+
+  // ─── FIX 3: Inline video play/pause handler ─────────────────────
+  const handleInlineVideoClick = useCallback((e, idx) => {
+    e.stopPropagation(); // don't open lightbox on video click
+    const vid = videoRefs.current[idx];
+    if (!vid) return;
+
+    if (vid.paused) {
+      vid.play().catch(() => {}); // catch autoplay-policy errors gracefully
+      setPlayingInline(true);
+      pauseAutoPlayTemporarily();
+    } else {
+      vid.pause();
+      setPlayingInline(false);
+    }
+  }, [pauseAutoPlayTemporarily]);
+
+  // Track when a video ends so autoplay can resume
+  const handleVideoEnded = useCallback(() => {
+    setPlayingInline(false);
+  }, []);
+
+  // ─── Lightbox ───────────────────────────────────────────────────
+  const openLightbox = useCallback((item) => {
+    // Pause inline video before opening lightbox
+    Object.values(videoRefs.current).forEach((v) => { if (v) v.pause(); });
+    setPlayingInline(false);
+    setLightboxItem(item);
     setLightboxOpen(true);
+    setAutoPlay(false);
+    document.body.style.overflow = "hidden";
+  }, []);
+
+  // FIX 4: Properly stop lightbox video on close
+  const closeLightbox = useCallback(() => {
+    if (lightboxVideoRef.current) {
+      lightboxVideoRef.current.pause();
+      lightboxVideoRef.current.currentTime = 0;
+    }
+    setLightboxOpen(false);
+    setLightboxItem(null);
+    document.body.style.overflow = "";
+    setTimeout(() => setAutoPlay(true), 500);
+  }, []);
+
+  // ─── Swipe support ──────────────────────────────────────────────
+  const touchStartX = useRef(null);
+  const onTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const onTouchEnd   = (e) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 50) dx < 0 ? goToNext() : goToPrevious();
+    touchStartX.current = null;
   };
 
-  const current = filteredGallery[currentIndex];
+  // ─── Filter change ──────────────────────────────────────────────
+  const changeFilter = (type) => {
+    setFilterType(type);
+    setCurrentIndex(0);
+    setPlayingInline(false);
+  };
 
-  // Calculate visible thumbnail range untuk tidak overload
-  const thumbStart = Math.max(0, currentIndex - visibleThumbnails);
-  const thumbEnd = Math.min(
-    filteredGallery.length,
-    currentIndex + visibleThumbnails + 1
-  );
-  const visibleThumbs = filteredGallery.slice(thumbStart, thumbEnd);
+  // ─── Photo counts ───────────────────────────────────────────────
+  const photoCount = gallery.filter(i => i.type === "photo").length;
+  const videoCount = gallery.filter(i => i.type === "video").length;
 
   return (
     <section className="gallery-section">
-      <div className="section-divider"></div>
+      <div className="section-divider" />
       <div className="section-label reveal-up" style={{ marginTop: "1.5rem" }}>
         Our memories
       </div>
@@ -121,83 +193,106 @@ export default function SectionGallery() {
         A Glimpse of <em>Us</em>
       </h2>
 
-      {/* 🎠 CAROUSEL SECTION */}
+      {/* ─── CAROUSEL ─────────────────────────────────────────────── */}
       <div className="carousel-wrapper">
+
         {/* Filter Buttons */}
         <div className="gallery-filter">
-          <button
-            className={`filter-btn ${filterType === "all" ? "active" : ""}`}
-            onClick={() => {
-              setFilterType("all");
-              setCurrentIndex(0);
-            }}
-          >
-            All ({gallery.length})
-          </button>
-          <button
-            className={`filter-btn ${filterType === "photo" ? "active" : ""}`}
-            onClick={() => {
-              setFilterType("photo");
-              setCurrentIndex(0);
-            }}
-          >
-            Photos (19)
-          </button>
-          <button
-            className={`filter-btn ${filterType === "video" ? "active" : ""}`}
-            onClick={() => {
-              setFilterType("video");
-              setCurrentIndex(0);
-            }}
-          >
-            Videos (5)
-          </button>
+          {[
+            { key: "all",   label: `All (${gallery.length})` },
+            { key: "photo", label: `Photos (${photoCount})` },
+            { key: "video", label: `Videos (${videoCount})` },
+          ].map(({ key, label }) => (
+            <button
+              key={key}
+              className={`filter-btn ${filterType === key ? "active" : ""}`}
+              onClick={() => changeFilter(key)}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
         {/* Main Carousel */}
-        <div className="carousel-container" ref={carouselRef}>
-          {/* Slides */}
+        <div
+          className="carousel-container"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
           <div className="carousel-track">
             {filteredGallery.map((item, idx) => (
               <div
-                key={idx}
-                className={`carousel-slide ${
-                  idx === currentIndex ? "active" : ""
-                }`}
+                key={`${item.src}-${idx}`}
+                className={`carousel-slide ${idx === currentIndex ? "active" : ""}`}
+                aria-hidden={idx !== currentIndex}
               >
                 <div className="carousel-image-wrapper">
+
                   {item.type === "photo" ? (
+                    /* ── PHOTO ── */
                     <img
                       src={item.src}
                       alt={item.caption}
                       className="carousel-image"
+                      loading={Math.abs(idx - currentIndex) <= 1 ? "eager" : "lazy"}
                       onClick={() => openLightbox(item)}
                     />
                   ) : (
+                    /* ── VIDEO ──
+                       FIX: each video gets its own ref via callback ref,
+                       and click handler plays/pauses inline without opening lightbox.
+                       A separate "open in fullscreen" icon opens the lightbox. */
                     <div className="carousel-video-wrapper">
                       <video
-                        ref={videoRef}
+                        ref={(el) => {
+                          // FIX 1 applied: store each video element by index
+                          if (el) videoRefs.current[idx] = el;
+                          else    delete videoRefs.current[idx];
+                        }}
                         poster={item.poster}
                         className="carousel-video"
-                        onClick={() => openLightbox(item)}
+                        playsInline          // required for iOS inline play
+                        preload="metadata"   // only load metadata, not full video
+                        onEnded={handleVideoEnded}
+                        onPlay={() => setPlayingInline(true)}
+                        onPause={() => setPlayingInline(false)}
+                        onClick={(e) => handleInlineVideoClick(e, idx)}
                       >
                         <source src={item.src} type="video/mp4" />
+                        Your browser does not support HTML5 video.
                       </video>
-                      <div className="video-play-icon">
+
+                      {/* Overlay play button — only shown when video is paused */}
+                      <div
+                        className="video-play-overlay"
+                        onClick={(e) => handleInlineVideoClick(e, idx)}
+                        aria-label="Play video"
+                        role="button"
+                        tabIndex={idx === currentIndex ? 0 : -1}
+                      >
                         <div className="play-button">▶</div>
                       </div>
+
+                      {/* Fullscreen / lightbox icon */}
+                      <button
+                        className="video-fullscreen-btn"
+                        onClick={() => openLightbox(item)}
+                        aria-label="Open video in fullscreen"
+                      >
+                        ⛶
+                      </button>
                     </div>
                   )}
 
                   {/* Type Badge */}
-                  <div className="carousel-type-badge">
+                  <div className="carousel-type-badge" aria-hidden="true">
                     {item.type === "photo" ? "📸" : "🎥"}
                   </div>
 
+                  {/* Caption overlay */}
                   <div className="carousel-overlay">
                     <div className="carousel-info">
                       <h3 className="carousel-caption">{item.caption}</h3>
-                      <p className="carousel-date">📅 {item.date}</p>
                     </div>
                   </div>
                 </div>
@@ -209,162 +304,133 @@ export default function SectionGallery() {
           <button
             className="carousel-btn carousel-btn-prev"
             onClick={goToPrevious}
-            aria-label="Previous"
+            aria-label="Previous slide"
           >
             ❮
           </button>
           <button
             className="carousel-btn carousel-btn-next"
             onClick={goToNext}
-            aria-label="Next"
+            aria-label="Next slide"
           >
             ❯
           </button>
 
-          {/* Play/Pause Button */}
+          {/* Auto-play toggle */}
           <button
             className="carousel-play-btn"
-            onClick={() => setAutoPlay(!autoPlay)}
-            aria-label={autoPlay ? "Pause" : "Play"}
+            onClick={() => {
+              setAutoPlay((prev) => !prev);
+              clearTimeout(autoPlayPauseRef.current);
+            }}
+            aria-label={autoPlay ? "Pause slideshow" : "Play slideshow"}
+            title={autoPlay ? "Pause slideshow" : "Play slideshow"}
           >
             {autoPlay ? "⏸" : "▶"}
           </button>
         </div>
 
-        {/* Photo Counter */}
-        <div className="carousel-counter">
+        {/* Counter */}
+        <div className="carousel-counter" aria-live="polite">
           {currentIndex + 1} / {filteredGallery.length}
         </div>
 
-        {/* Thumbnails - Optimized untuk banyak item */}
+        {/* Thumbnails */}
         <div className="carousel-thumbnails-wrapper">
-          <button
-            className="thumb-nav-btn thumb-nav-prev"
-            onClick={() => setCurrentIndex(Math.max(0, currentIndex - 5))}
-            style={{ visibility: thumbStart > 0 ? "visible" : "hidden" }}
-          >
-            ❮
-          </button>
-
-          <div className="carousel-thumbnails">
-            {visibleThumbs.map((item, idx) => {
-              const actualIdx = thumbStart + idx;
-              return (
-                <button
-                  key={actualIdx}
-                  className={`carousel-thumbnail ${
-                    actualIdx === currentIndex ? "active" : ""
-                  }`}
-                  onClick={() => goToSlide(actualIdx)}
-                  aria-label={`Go to ${item.caption}`}
-                  title={item.caption}
-                >
-                  {item.type === "photo" ? (
-                    <img src={item.src} alt={item.caption} loading="lazy" />
-                  ) : (
-                    <>
-                      <img
-                        src={item.poster}
-                        alt={item.caption}
-                        loading="lazy"
-                      />
-                      <div className="video-badge-small">🎥</div>
-                    </>
-                  )}
-                </button>
-              );
-            })}
+          <div className="carousel-thumbnails" ref={thumbnailsRef}>
+            {filteredGallery.map((item, idx) => (
+              <button
+                key={`thumb-${idx}`}
+                className={`carousel-thumbnail ${idx === currentIndex ? "active" : ""}`}
+                onClick={() => goToSlide(idx)}
+                aria-label={`Go to: ${item.caption}`}
+                title={item.caption}
+              >
+                {item.type === "photo" ? (
+                  <img src={item.src} alt={item.caption} loading="lazy" />
+                ) : (
+                  <>
+                    {/* FIX 5: Use poster image for video thumbnails, fallback to a colored div */}
+                    {item.poster
+                      ? <img src={item.poster} alt={item.caption} loading="lazy" />
+                      : <div className="thumb-video-fallback">🎥</div>
+                    }
+                    <div className="video-badge-small" aria-hidden="true">🎥</div>
+                  </>
+                )}
+              </button>
+            ))}
           </div>
-
-          <button
-            className="thumb-nav-btn thumb-nav-next"
-            onClick={() =>
-              setCurrentIndex(
-                Math.min(
-                  filteredGallery.length - 1,
-                  currentIndex + 5
-                )
-              )
-            }
-            style={{
-              visibility: thumbEnd < filteredGallery.length ? "visible" : "hidden",
-            }}
-          >
-            ❯
-          </button>
         </div>
 
-        {/* Dots Indicator - Smart dots untuk banyak item */}
+        {/* Progress / Dots */}
         <div className="carousel-dots-container">
-          <div className="carousel-dots">
-            {filteredGallery.length <= 10
-              ? filteredGallery.map((_, idx) => (
-                  <button
-                    key={idx}
-                    className={`carousel-dot ${
-                      idx === currentIndex ? "active" : ""
-                    }`}
-                    onClick={() => goToSlide(idx)}
-                    aria-label={`Go to slide ${idx + 1}`}
-                  />
-                ))
-              : // Untuk lebih dari 10, tampilkan progress bar
-              null}
-          </div>
-          {filteredGallery.length > 10 && (
-            <div className="carousel-progress">
+          {filteredGallery.length <= 10 ? (
+            <div className="carousel-dots" role="tablist">
+              {filteredGallery.map((_, idx) => (
+                <button
+                  key={idx}
+                  role="tab"
+                  aria-selected={idx === currentIndex}
+                  className={`carousel-dot ${idx === currentIndex ? "active" : ""}`}
+                  onClick={() => goToSlide(idx)}
+                  aria-label={`Slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="carousel-progress" aria-hidden="true">
               <div
                 className="progress-bar-fill"
-                style={{
-                  width: `${((currentIndex + 1) / filteredGallery.length) * 100}%`,
-                }}
+                style={{ width: `${((currentIndex + 1) / filteredGallery.length) * 100}%` }}
               />
             </div>
           )}
         </div>
       </div>
 
-      {/* 🖼️ LIGHTBOX - Support Photo & Video */}
-      <div
-        id="lightbox"
-        className={`lightbox${lightboxOpen ? " open" : ""}`}
-        onClick={() => setLightboxOpen(false)}
-        role="dialog"
-        aria-modal="true"
-        aria-hidden={!lightboxOpen}
-      >
-        <button
-          id="lightboxClose"
-          className="lightbox-close"
-          aria-label="Close"
-          onClick={() => setLightboxOpen(false)}
+      {/* ─── LIGHTBOX ─────────────────────────────────────────────── */}
+      {lightboxOpen && lightboxItem && (
+        <div
+          className="lightbox open"
+          onClick={closeLightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label={lightboxItem.caption}
         >
-          ✕
-        </button>
-
-        {lightboxType === "photo" ? (
-          <img
-            id="lightboxImg"
-            className="lightbox-img"
-            src={lightboxSrc}
-            alt={lightboxCaption}
-          />
-        ) : (
-          <video
-            id="lightboxVideo"
-            className="lightbox-video"
-            controls
-            autoPlay
-            onClick={(e) => e.stopPropagation()}
+          <button
+            className="lightbox-close"
+            aria-label="Close lightbox"
+            onClick={closeLightbox}
           >
-            <source src={lightboxSrc} type="video/mp4" />
-          </video>
-        )}
+            ✕
+          </button>
 
-        <div id="lightboxCaption" className="lightbox-caption">
-          {lightboxCaption}
+          {lightboxItem.type === "photo" ? (
+            <img
+              className="lightbox-img"
+              src={lightboxItem.src}
+              alt={lightboxItem.caption}
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            /* FIX 4: lightbox video has its own ref for proper pause-on-close */
+            <video
+              ref={lightboxVideoRef}
+              className="lightbox-video"
+              controls
+              autoPlay
+              playsInline
+              onClick={(e) => e.stopPropagation()}
+            >
+              <source src={lightboxItem.src} type="video/mp4" />
+              Your browser does not support HTML5 video.
+            </video>
+          )}
+
+          <div className="lightbox-caption">{lightboxItem.caption}</div>
         </div>
-      </div>
+      )}
     </section>
   );
 }
