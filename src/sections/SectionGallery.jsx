@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 const gallery = [
   // 📸 PHOTOS
   { type: "photo", src: "/photos/A_moment_intime.webp",      caption: "A moment in time" },
-  { type: "photo", src: "/photos/Jususttwo.webp",             caption: "Just us two" },
+  { type: "photo", src: "/photos/Jusustwo.webp",             caption: "Just us two" },
   { type: "photo", src: "/photos/smilesandstars.webp",        caption: "Smiles & stars" },
   { type: "photo", src: "/photos/goldenhour.webp",            caption: "Golden hour" },
   { type: "photo", src: "/photos/alwaysforever.webp",         caption: "Always & forever" },
